@@ -36,6 +36,7 @@ public class TeacherController {
     public Teacher updateTeacher(@PathVariable long teacher_id, @Valid @RequestBody Teacher teacher) {
         Teacher teacherFromDB = teacherRepository.findById(teacher_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with ID: " + teacher_id));
+        teacherFromDB.setTeacher_name(teacher.getTeacher_name());
         teacherFromDB.setCell_phone(teacher.getCell_phone());
         teacherFromDB.setEmail(teacher.getEmail());
         teacherFromDB.setHome_phone(teacher.getHome_phone());
@@ -46,6 +47,10 @@ public class TeacherController {
         teacherFromDB.setSubjects(teacher.getSubjects());
         teacherFromDB.setLevel(teacher.getLevel());
         teacherFromDB.setSubjects(teacher.getSubjects());
+        teacherFromDB.setStatus(teacher.getStatus());
+        if (!teacher.getStatus().equalsIgnoreCase("active")) {
+            teacherFromDB.setEnd_date(teacher.getEnd_date());
+        }
         return teacherRepository.save(teacherFromDB);
     }
 

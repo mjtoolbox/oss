@@ -27,6 +27,9 @@ public class Teacher implements Serializable {
     @Column(name = "teacher_name")
     private String teacher_name;
 
+    @Column(name = "status")
+    private String status;
+
     @Column(name = "cell_phone")
     private String cell_phone;
 
@@ -56,6 +59,9 @@ public class Teacher implements Serializable {
 
     @Column(name = "start_date")
     private Date start_date;
+
+    @Column(name = "end_date")
+    private Date end_date;
 
     @CreationTimestamp
     @Column(name = "last_update")
