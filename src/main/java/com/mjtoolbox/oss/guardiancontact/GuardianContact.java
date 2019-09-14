@@ -24,6 +24,9 @@ public class GuardianContact implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private Guardian guardian;
 
+    @Column(name = "guardian_id", insertable = false, updatable = false)
+    private long guardian_id;
+
     @Column(name = "cell_phone")
     private String cell_phone;
 

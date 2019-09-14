@@ -27,8 +27,8 @@ public class SpringFoxConfig {
 
     private ApiInfo getApiInfo() {
 
-        return new ApiInfoBuilder().title("Spring Boot REST API based on DVD Rental sample")
-                .description("DVD Rental Sample Data REST API")
+        return new ApiInfoBuilder().title("Spring Boot REST API OneSmallStep")
+                .description("OneSmallSteps Data REST API")
                 .contact(new Contact("mjtoolbox", "github.com/mjtoolbox", "comonjunk@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

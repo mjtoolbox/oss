@@ -24,7 +24,7 @@ public class StudentContact implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private Student student;
 
-    @Column(name = "membership_id")
+    @Column(name = "membership_id", insertable = false, updatable = false)
     private long membership_id;
 
     @Column(name = "cell_phone")
