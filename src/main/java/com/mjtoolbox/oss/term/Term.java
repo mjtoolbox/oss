@@ -2,8 +2,8 @@ package com.mjtoolbox.oss.term;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjtoolbox.oss.invoice.Invoice;
-import com.mjtoolbox.oss.program.Program;
 import com.mjtoolbox.oss.student.Student;
+import com.mjtoolbox.oss.termprogram.TermProgram;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -52,6 +52,6 @@ public class Term implements Serializable {
 
     @OneToMany(mappedBy = "term", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Program> programs = new HashSet<>();
+    private Set<TermProgram> termprograms = new HashSet<>();
 
 }
