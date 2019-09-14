@@ -32,6 +32,13 @@ public class PayrollController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Different URL is possible such as: "/teachers/{teacher_id}/payrolls/{payroll_id}
+     * If the route is coming from Teacher, use above.
+     *
+     * @param payroll_id
+     * @return
+     */
     @GetMapping("/payrolls/{payroll_id}")
     public Payroll findById(@PathVariable long payroll_id) {
         return payrollRepository.findById(payroll_id)
@@ -43,7 +50,7 @@ public class PayrollController {
     public Payroll createPayroll(@PathVariable long teacher_id, @Valid @RequestBody Payroll payroll) {
         return teacherRepository.findById(teacher_id).map(teacher -> {
             payroll.setTeacher(teacher);
-            // Otherwise, teacher_id will be empty in payroll
+            // Manually teacher ID needs to be set. Otherwise, teacher_id will be empty in payroll
             payroll.setTeacher_id(teacher.getTeacher_id());
             return payrollRepository.save(payroll);
         }).orElseThrow(() -> new ResourceNotFoundException("Teacher ID " + teacher_id + " not found"));

@@ -13,10 +13,8 @@ import java.util.stream.StreamSupport;
 @RestController
 public class TermController {
 
-
     @Resource
     TermRepository termRepository;
-
 
     @GetMapping("/terms")
     public List<Term> retrieveAllTerms() {
