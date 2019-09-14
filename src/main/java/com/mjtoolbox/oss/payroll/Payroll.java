@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +19,7 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "payroll", schema = "public")
-public class Payroll {
+public class Payroll implements Serializable {
 
     @Id
     @Column(name = "payroll_id")

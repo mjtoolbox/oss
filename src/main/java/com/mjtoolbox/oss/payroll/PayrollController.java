@@ -63,7 +63,7 @@ public class PayrollController {
     @DeleteMapping("/payrolls/{payroll_id}")
     public void delete(@PathVariable long payroll_id) {
         payrollRepository.findById(payroll_id)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with ID: " + payroll_id));
+                .orElseThrow(() -> new ResourceNotFoundException("Payroll not found with ID: " + payroll_id));
         payrollRepository.deleteById(payroll_id);
     }
 }
