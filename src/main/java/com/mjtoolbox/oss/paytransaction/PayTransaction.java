@@ -10,12 +10,13 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "pay_transaction", schema = "public")
-public class PayTransaction {
+public class PayTransaction implements Serializable {
 
     @Id
     @Column(name = "transactoin_id")

@@ -38,7 +38,7 @@ public class ProgramController {
     public Program updateProgram(@PathVariable long program_id, @Valid @RequestBody Program program) {
         Program programFromDB = programRepository.findById(program_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Program not found with ID: " + program_id));
-        programFromDB.setProgram_type(program.getProgram_type());
+        programFromDB.setSubject(program.getSubject());
         programFromDB.setCost(program.getCost());
         return programRepository.save(programFromDB);
     }

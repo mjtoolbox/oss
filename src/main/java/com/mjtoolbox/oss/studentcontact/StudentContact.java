@@ -1,5 +1,6 @@
 package com.mjtoolbox.oss.studentcontact;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjtoolbox.oss.student.Student;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class StudentContact implements Serializable {
 
     @JoinColumn(name = "membership_id")
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     private Student student;
 
     @Column(name = "membership_id", insertable = false, updatable = false)

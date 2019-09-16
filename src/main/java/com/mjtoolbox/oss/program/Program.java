@@ -2,6 +2,7 @@ package com.mjtoolbox.oss.program;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjtoolbox.oss.lesson.Lesson;
+import com.mjtoolbox.oss.teacher.Teacher;
 import com.mjtoolbox.oss.termprogram.TermProgram;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -24,9 +25,8 @@ public class Program implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long program_id;
 
-
-    @Column(name = "program_type")
-    private String program_type;
+    @Column(name = "subject")
+    private String subject;
 
     @Column(name = "cost")
     private float cost;
@@ -35,6 +35,10 @@ public class Program implements Serializable {
     @Column(name = "last_update")
     @Setter(AccessLevel.NONE)
     private Date last_updated;
+
+    @OneToMany(mappedBy = "program", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Teacher> teachers = new HashSet<>();
 
     @OneToMany(mappedBy = "program", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore

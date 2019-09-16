@@ -1,7 +1,6 @@
 package com.mjtoolbox.oss.guardian;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjtoolbox.oss.guardiancontact.GuardianContact;
 import com.mjtoolbox.oss.student.Student;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -24,15 +23,32 @@ public class Guardian implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long guardian_id;
 
-    @OneToOne(mappedBy = "guardian", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
-    private GuardianContact guardianContact;
-
     @Column(name = "guardian_name")
     private String guardian_name;
 
     @Column(name = "relationship")
     private String relationship;
+
+    @Column(name = "cell_phone")
+    private String cell_phone;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "home_phone")
+    private String home_phone;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "province")
+    private String province;
+
+    @Column(name = "postal_code")
+    private String postal_code;
 
     @CreationTimestamp
     @Column(name = "last_update")

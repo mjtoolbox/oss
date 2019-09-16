@@ -51,6 +51,12 @@ public class Student implements Serializable {
     @Column(name = "date_of_birth")
     private Date date_of_birth;
 
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "membership_type")
+    private String membership_type;
+
     @Column(name = "grade")
     private int grade;
 

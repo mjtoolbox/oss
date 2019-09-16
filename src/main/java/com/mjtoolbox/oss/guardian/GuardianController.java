@@ -1,5 +1,7 @@
 package com.mjtoolbox.oss.guardian;
 
+import com.mjtoolbox.oss.student.Student;
+import com.mjtoolbox.oss.student.StudentRepository;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,9 @@ public class GuardianController {
     @Resource
     GuardianRepository guardianRepository;
 
+    @Resource
+    StudentRepository studentRepository;
+
     @GetMapping("/guardians")
     public List<Guardian> retrieveAllGuardians() {
         return StreamSupport.stream(guardianRepository.findAll().spliterator(), false)
@@ -28,6 +33,22 @@ public class GuardianController {
                 .orElseThrow(() -> new ResourceNotFoundException("Guardian not found with ID: " + guardian_id));
     }
 
+    /**
+     * NOT WORKING!!! Find Guardian by Student
+     *
+     * @param membership_id
+     * @return
+     */
+    @GetMapping("/students/{membership_id}/guardians")
+    public Guardian findGuardianByStudent(@PathVariable long membership_id) {
+        Student student = studentRepository.findById(membership_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + membership_id));
+
+        return guardianRepository.findById(student.getGuardian_id())
+                .orElseThrow(() -> new ResourceNotFoundException("Guardian not found with ID: " + student.getGuardian_id()));
+    }
+
+
     @PostMapping("/guardians")
     public Guardian createGuardian(@Valid @RequestBody Guardian guardian) {
         return guardianRepository.save(guardian);
@@ -39,6 +60,13 @@ public class GuardianController {
                 .orElseThrow(() -> new ResourceNotFoundException("Guardian not found with ID: " + guardian_id));
         guardianFromDB.setGuardian_name(guardian.getGuardian_name());
         guardianFromDB.setRelationship(guardian.getRelationship());
+        guardianFromDB.setCell_phone(guardian.getCell_phone());
+        guardianFromDB.setEmail(guardian.getEmail());
+        guardianFromDB.setHome_phone(guardian.getHome_phone());
+        guardianFromDB.setAddress(guardian.getAddress());
+        guardianFromDB.setCity(guardian.getCity());
+        guardianFromDB.setProvince(guardian.getProvince());
+        guardianFromDB.setPostal_code(guardian.getPostal_code());
         return guardianRepository.save(guardianFromDB);
     }
 
