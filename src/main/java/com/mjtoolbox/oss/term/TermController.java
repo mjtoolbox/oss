@@ -28,7 +28,7 @@ public class TermController {
                 .orElseThrow(() -> new ResourceNotFoundException("Term not found with ID: " + term_id));
     }
 
-    @PostMapping("/terms")
+    @PostMapping("/students/{student_id}/terms")
     public Term createTerm(@Valid @RequestBody Term term) {
         return termRepository.save(term);
     }
