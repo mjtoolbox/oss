@@ -2,6 +2,7 @@ package com.mjtoolbox.oss.guardian;
 
 import com.mjtoolbox.oss.student.Student;
 import com.mjtoolbox.oss.student.StudentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.stream.StreamSupport;
 
 @CrossOrigin()
 @RestController
+@Slf4j
 public class GuardianController {
 
     @Resource
@@ -27,6 +29,13 @@ public class GuardianController {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * Simulating slow IO using Thread
+     *
+     * @param guardian_id
+     * @return
+     */
     @GetMapping("/guardians/{guardian_id}")
     public Guardian findById(@PathVariable long guardian_id) {
         return guardianRepository.findById(guardian_id)
