@@ -1,47 +1,39 @@
 package com.mjtoolbox.oss.authentication;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
-@Data
+
 //public class AuthenticationBean implements UserDetails, Serializable {
 public class JwtRequest implements Serializable {
 
+    private static final long serialVersionUID = 5926468583005150707L;
 
-//    @JsonIgnore
-//    private final Long id;
+    private String username;
+    private String password;
 
-    String username;
+    //need default constructor for JSON Parsing
+    public JwtRequest() {
 
-    //    @JsonIgnore
-    String password;
-
-
-    public JwtRequest(String you_are_authenticated) {
     }
-//    private final Collection<? extends GrantedAuthority> authorities;
 
-//    @Override
-//    @JsonIgnore
-//    public boolean isAccountNonExpired() {
-//        return false;
-//    }
-//
-//    @Override
-//    @JsonIgnore
-//    public boolean isAccountNonLocked() {
-//        return false;
-//    }
-//
-//    @Override
-//    @JsonIgnore
-//    public boolean isCredentialsNonExpired() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return false;
-//    }
+    public JwtRequest(String username, String password) {
+        this.setUsername(username);
+        this.setPassword(password);
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
