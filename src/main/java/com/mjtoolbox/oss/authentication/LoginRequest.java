@@ -4,19 +4,19 @@ import java.io.Serializable;
 
 
 //public class AuthenticationBean implements UserDetails, Serializable {
-public class JwtRequest implements Serializable {
+public class LoginRequest implements Serializable {
 
     private static final long serialVersionUID = 5926468583005150707L;
 
-    private String username;
+    private String username; // user email
     private String password;
 
     //need default constructor for JSON Parsing
-    public JwtRequest() {
+    public LoginRequest() {
 
     }
 
-    public JwtRequest(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.setUsername(username);
         this.setPassword(password);
     }
