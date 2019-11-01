@@ -25,7 +25,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         UserOss user = userRepository.findByEmail(email);
 
         log.info("************************* " + user.getEmail() + " PW: " + user.getPassword());
-        return User.withUsername(user.getUser_name())
+        return User.withUsername(user.getEmail())
                 .password(user.getPassword())
                 .authorities(user.getRoles())
                 .build();

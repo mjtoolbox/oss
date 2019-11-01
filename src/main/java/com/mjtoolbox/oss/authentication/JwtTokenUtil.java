@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -68,6 +70,15 @@ public class JwtTokenUtil implements Serializable {
 
     /**
      * Generate Token for the user. Email is ID.
+     * <p>
+     * while creating the token -
+     * 1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
+     * 2. Sign the JWT using the HS256 algorithm and secret key.
+     * 3. According to JWS Compact Serialization(https://bit.ly/321Ui4I)
+     * compaction of the JWT to a URL-safe string
+     * <p>
+     * IMPORTANT: Spring Security role name prefix "ROLE_".
+     * https://bit.ly/2N9uTC6
      *
      * @param userDetails
      * @return
@@ -75,17 +86,12 @@ public class JwtTokenUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
 
         Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
-        claims.put("userName", userDetails.getUsername());
-        claims.put("role", "admin");
+        claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
         return createJWT(claims, userDetails.getUsername());
     }
 
-    //while creating the token -
-    //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-    //2. Sign the JWT using the HS256 algorithm and secret key.
-    //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-    //   compaction of the JWT to a URL-safe string
+
     private String createJWT(Map<String, Object> claims, String subject) {
         final Date createdDate = new Date();
         final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);
@@ -98,12 +104,11 @@ public class JwtTokenUtil implements Serializable {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(subject)
+                .setIssuer("http://onesmallsteps.com")
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
                 .signWith(signatureAlgorithm, signedKey)
                 .compact();
-
     }
 
 

@@ -11,9 +11,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
@@ -37,27 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
 
-    /**
-     * AuthManagerBuilder provides various authentication mechanism: DB, LDAP,
-     *
-     * @param auth
-     * @throws Exception
-     */
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
-//        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -66,45 +45,53 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     /**
-     * For DEV purpose, permit all traffic and disable security
+     * AuthManagerBuilder provides various authentication mechanism: DB, LDAP, in-memory.
+     * Configure AuthenticationManager so that it knows from where to load user for matching credentials.
+     *
+     * @param auth
+     * @throws Exception
+     */
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder());
+    }
+
+
+    /**
+     * For DEV purpose, permit all traffic and disable security.
+     * http.authorizeRequests().antMatchers("/").permitAll();
+     * <p>
+     * For Basic Authentication Security,
+     * http
+     * .authorizeRequests()
+     * .anyRequest().authenticated()
+     * .and()
+     * .formLogin().and()
+     * .httpBasic().and()
+     * .cors();
+     * <p>
+     * Make sure we use stateless session; session won't be used to store user's state.
+     * Add a filter to validate the tokens with every request.
      *
      * @param http
      * @throws Exception
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        /**
-         * Disable security
-         */
-//        http.authorizeRequests().antMatchers("/").permitAll();
-
-        /**
-         * Use Basic Authentication Security
-         */
-//        http
-//                .authorizeRequests()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().and()
-//                .httpBasic().and()
-//                .cors();
-
         /**
          * JWT Authentication
          */
         http
                 .csrf().disable()
                 // Don't authenticate this particular request
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
+                .authorizeRequests().antMatchers("/token/**").permitAll()
                 // All other request need to be authenticated
-                .anyRequest().authenticated();
-//                .and()
-//                // make sure we use stateless session; session won't be used to store user's state.
-//                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        // Add a filter to validate the tokens with every request
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
