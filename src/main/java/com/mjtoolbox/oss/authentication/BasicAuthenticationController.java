@@ -24,18 +24,6 @@ public class BasicAuthenticationController {
     @Autowired
     JwtUserDetailsService jwtUserDetailsService;
 
-    @GetMapping(path = "/basicauth")
-    public String authenticate() {
-        //throw new RuntimeException("Some Error has Happened! Contact Support at ***-***");
-        return "You are authenticated";
-    }
-
-//    @GetMapping(path = "/basicauth")
-//    public String authenticate() {
-//        return "You are authenticated";
-//    }
-
-
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
 

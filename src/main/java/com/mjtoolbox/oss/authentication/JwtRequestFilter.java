@@ -28,6 +28,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Resource
     private JwtUserDetailsService jwtUserDetailsService;
 
+    /**
+     * This method is for consequent request with JWT
+     *
+     * @param request
+     * @param response
+     * @param chain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {

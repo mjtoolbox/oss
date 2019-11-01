@@ -3,27 +3,24 @@ package com.mjtoolbox.oss.authentication;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
-;
 
 @Component
 public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185122326007488L;
 
-    // We need a signing key, so we'll create one just for this example. Usually
-    // the key would be read from your application configuration instead.
-    Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     long nowMillis = System.currentTimeMillis();
     Date now = new Date(nowMillis);
@@ -47,12 +44,21 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken(token);
+        final Claims claims = decodeJWT(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    /**
+     * Decode JWT using our secret defined in application.properties
+     *
+     * @param token
+     * @return
+     */
+    private Claims decodeJWT(String token) {
+        Claims claims = Jwts.parser().
+                setSigningKey(DatatypeConverter.parseBase64Binary(secret)).
+                parseClaimsJws(token).getBody();
+        return claims;
     }
 
     private Boolean isTokenExpired(String token) {
@@ -72,25 +78,32 @@ public class JwtTokenUtil implements Serializable {
         claims.put("userName", userDetails.getUsername());
         claims.put("role", "admin");
 
-        return doGenerateToken(claims, userDetails.getUsername());
+        return createJWT(claims, userDetails.getUsername());
     }
 
     //while creating the token -
     //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-    //2. Sign the JWT using the HS512 algorithm and secret key.
+    //2. Sign the JWT using the HS256 algorithm and secret key.
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    private String createJWT(Map<String, Object> claims, String subject) {
         final Date createdDate = new Date();
         final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);
+
+        // We need a signing key, so we'll create one just for this example. Usually
+        // the key would be read from your application configuration instead.
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
+        Key signedKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
-                .signWith(key)
+                .signWith(signatureAlgorithm, signedKey)
                 .compact();
+
     }
 
 
