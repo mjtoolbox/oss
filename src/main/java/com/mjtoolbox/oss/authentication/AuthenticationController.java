@@ -2,8 +2,6 @@ package com.mjtoolbox.oss.authentication;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin()
 @RestController
 @Slf4j
 @RequestMapping(value = "/token")
@@ -28,7 +26,7 @@ public class AuthenticationController {
     JwtUserDetailsService jwtUserDetailsService;
 
     @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
+    public JwtResponse<AuthToken> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -41,12 +39,12 @@ public class AuthenticationController {
         final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(loginRequest.getUsername());
         log.info("createAuthenticationToken: " + userDetails.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+        return new JwtResponse<>(200, "success", new AuthToken(token, userDetails.getUsername()));
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public ResponseEntity<?> logout() throws AuthenticationException {
-        return new ResponseEntity(HttpStatus.OK);
+    public JwtResponse<AuthToken> logout() throws AuthenticationException {
+        return new JwtResponse<>(200, "success", null);
     }
 
 
