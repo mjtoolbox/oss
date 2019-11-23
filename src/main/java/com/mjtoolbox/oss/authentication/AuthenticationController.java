@@ -1,5 +1,6 @@
 package com.mjtoolbox.oss.authentication;
 
+import com.mjtoolbox.oss.user.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +24,7 @@ public class AuthenticationController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    JwtUserDetailsService jwtUserDetailsService;
+    UserServiceImpl userServiceImpl;
 
     @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
     public JwtResponse<AuthToken> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
@@ -36,7 +37,7 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(loginRequest.getUsername());
+        final UserDetails userDetails = userServiceImpl.loadUserByUsername(loginRequest.getUsername());
         log.info("createAuthenticationToken: " + userDetails.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return new JwtResponse<>(200, "success", new AuthToken(token, userDetails.getUsername()));

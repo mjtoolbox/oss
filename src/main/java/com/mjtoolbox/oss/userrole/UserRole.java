@@ -1,8 +1,7 @@
 package com.mjtoolbox.oss.userrole;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjtoolbox.oss.role.Role;
-import com.mjtoolbox.oss.user.UserOss;
+import com.mjtoolbox.oss.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.OnDelete;
@@ -18,7 +17,7 @@ import java.io.Serializable;
 public class UserRole implements Serializable {
 
     @Id
-    @Column(name = "userrole_id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userrole_id;
 
@@ -27,17 +26,17 @@ public class UserRole implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore
-    private UserOss user;
+    private User user;
 
     @Column(name = "user_id", insertable = false, updatable = false)
     private long user_id;
 
     // @JsonIgnore will not fetch Program object in response
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "role_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonIgnore
-    private Role role;
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "role_id", nullable = false)
+//    @OnDelete(action = OnDeleteAction.NO_ACTION)
+//    @JsonIgnore
+//    private Role role;
 
     @Column(name = "role_id", insertable = false, updatable = false)
     private long role_id;

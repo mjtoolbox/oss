@@ -1,6 +1,6 @@
 package com.mjtoolbox.oss.role;
 
-import com.mjtoolbox.oss.user.UserOss;
+import com.mjtoolbox.oss.user.User;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -20,18 +19,21 @@ import java.util.Set;
 @EqualsAndHashCode
 @Table(name = "role", schema = "public")
 public class Role implements Serializable, GrantedAuthority {
+    public Role() {
+    }
+
+    public Role(String role) {
+        authority = role;
+    }
 
     @Id
     @Column(name = "role_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long user_id;
 
-    @Column(name = "role_name")
-    private String role_name;
+    @Column(name = "authority")
+    private String authority;
 
-    public String getAuthority() {
-        return role_name;
-    }
 
     @CreationTimestamp
     @Column(name = "last_update")
@@ -44,19 +46,19 @@ public class Role implements Serializable, GrantedAuthority {
 //    private Set<UserRole> userRoleSet = new HashSet<>();
 
     @ManyToMany(mappedBy = "roles")
-    private Set<UserOss> users = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return user_id == role.user_id &&
-                Objects.equals(role_name, role.role_name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user_id, role_name);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Role role = (Role) o;
+//        return user_id == role.user_id &&
+//                Objects.equals(role_name, role.role_name);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(user_id, role_name);
+//    }
 }

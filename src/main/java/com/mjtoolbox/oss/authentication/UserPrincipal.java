@@ -1,6 +1,6 @@
 package com.mjtoolbox.oss.authentication;
 
-import com.mjtoolbox.oss.user.UserOss;
+import com.mjtoolbox.oss.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,13 +33,13 @@ public class UserPrincipal implements UserDetails {
      * @param user
      * @return
      */
-    public static UserPrincipal create(UserOss user) {
+    public static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole_name()))
+                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
                 .collect(Collectors.toList());
 
-        return new UserPrincipal(user.getEmail(),
-                user.getUser_name(),
+        return new UserPrincipal(user.getUsername(),
+                user.getName(),
                 user.getPassword(),
                 authorities);
     }
