@@ -1,6 +1,5 @@
 package com.mjtoolbox.oss.role;
 
-import com.mjtoolbox.oss.user.User;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,20 +10,13 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
 @EqualsAndHashCode
 @Table(name = "role", schema = "public")
 public class Role implements Serializable, GrantedAuthority {
-    public Role() {
-    }
 
-    public Role(String role) {
-        authority = role;
-    }
 
     @Id
     @Column(name = "role_id")
@@ -40,13 +32,20 @@ public class Role implements Serializable, GrantedAuthority {
     @Setter(AccessLevel.NONE)
     private Date last_updated;
 
+    public Role() {
+    }
+
+    public Role(String role) {
+        authority = role;
+    }
+
 //
 //    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JsonIgnore
 //    private Set<UserRole> userRoleSet = new HashSet<>();
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
+//    @ManyToMany(mappedBy = "roles")
+//    private Set<User> users = new HashSet<>();
 
 //    @Override
 //    public boolean equals(Object o) {
