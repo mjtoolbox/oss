@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-//        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder());
+//        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder())
     }
 
 
@@ -85,6 +85,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 // Don't authenticate this particular request
+                .authorizeRequests().antMatchers("/register/**").permitAll()
+                .and()
                 .authorizeRequests().antMatchers("/token/**").permitAll()
                 // All other request need to be authenticated
                 .anyRequest().authenticated()

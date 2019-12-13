@@ -32,6 +32,16 @@ public class UserController {
         return userRepository.findByUsername(email);
     }
 
+    @PostMapping("/register")
+    public User createUser(@Valid @RequestBody User user) throws UserExistException {
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            throw new UserExistException("User email already exists: " + user.getUsername());
+
+        }
+        return userRepository.save(user);
+    }
+
     /**
      * Update User info (e.g. password, roles).
      * {
