@@ -2,6 +2,7 @@ package com.mjtoolbox.oss.user;
 
 
 import com.mjtoolbox.oss.authentication.UserExistException;
+import com.mjtoolbox.oss.authentication.UserPrincipal;
 import com.mjtoolbox.oss.role.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -34,9 +35,32 @@ public class UserServiceImpl implements UserDetailsService {
         return encoder;
     }
 
+    /**
+     * This method is used in AuthenticationController
+     *
+     * @param email
+     * @return
+     * @throws ResourceNotFoundException
+     */
+    public UserPrincipal loadUserPrincipalByEmail(String email) throws ResourceNotFoundException {
+        User user = userRepository.findByUsername(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User email cannot be found in the system.");
+        }
+
+        //String email, String fullName, String password, Collection<? extends GrantedAuthority> authorities
+        return new UserPrincipal(email, user.getName(), "", getAuthority(user));
+    }
+
+    /**
+     * Used in JwtRequestFilter
+     *
+     * @param email
+     * @return
+     * @throws ResourceNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws ResourceNotFoundException {
-
         User user = userRepository.findByUsername(email);
         if (user == null) {
             throw new UsernameNotFoundException("User email cannot be found in the system.");
@@ -54,7 +78,8 @@ public class UserServiceImpl implements UserDetailsService {
     private Set getAuthority(User user) {
         Set authorities = new HashSet<>();
         user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAuthority()));
+//            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAuthority()));
+            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
         });
         return authorities;
     }

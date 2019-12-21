@@ -8,8 +8,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @CrossOrigin()
 @RestController
@@ -26,27 +27,35 @@ public class AuthenticationController {
     @Autowired
     UserServiceImpl userServiceImpl;
 
-    @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-    public JwtResponse<AuthToken> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
 
+    /**
+     * @param loginRequest
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
+    public JwtResponse createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
+                        loginRequest.getEmail(),
                         loginRequest.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        final UserDetails userDetails = userServiceImpl.loadUserByUsername(loginRequest.getUsername());
-        log.info("createAuthenticationToken: " + userDetails.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return new JwtResponse<>(200, "success", new AuthToken(token, userDetails.getUsername()));
+        final UserPrincipal userPrincipal = userServiceImpl.loadUserPrincipalByEmail(loginRequest.getEmail());
+        ;
+        log.info("createAuthenticationToken: " + userPrincipal.getUsername());
+        return new JwtResponse(200,
+                "success",
+                userPrincipal.getEmail(),
+                jwtTokenUtil.generateToken(userPrincipal),
+                userPrincipal.getUsername(),
+                (Set) userPrincipal.getAuthorities()
+        );
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public JwtResponse<AuthToken> logout() throws AuthenticationException {
-        return new JwtResponse<>(200, "success", null);
+    public JwtResponse logout() throws AuthenticationException {
+        return new JwtResponse(200, "success", null, null, null, null);
     }
-
-
 }

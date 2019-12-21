@@ -3,12 +3,11 @@ package com.mjtoolbox.oss.authentication;
 import java.io.Serializable;
 
 
-//public class AuthenticationBean implements UserDetails, Serializable {
 public class LoginRequest implements Serializable {
 
     private static final long serialVersionUID = 5926468583005150707L;
 
-    private String username; // user email
+    private String email; // user email
     private String password;
 
     //need default constructor for JSON Parsing
@@ -16,17 +15,17 @@ public class LoginRequest implements Serializable {
 
     }
 
-    public LoginRequest(String username, String password) {
-        this.setUsername(username);
+    public LoginRequest(String email, String password) {
+        this.setEmail(email);
         this.setPassword(password);
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getEmail() {
+        return this.email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
