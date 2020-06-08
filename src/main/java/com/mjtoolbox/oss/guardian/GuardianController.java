@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @Slf4j
 public class GuardianController {

@@ -83,6 +83,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          * JWT Authentication
          */
         http
+                .cors().and()
+                .csrf().disable()
+                // Don't authenticate this particular request
+                .authorizeRequests().antMatchers("/").permitAll()
+                .and()
+                // All other request need to be authenticated
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+/*
+// Enable everything
+                .cors().and()
                 .csrf().disable()
                 // Don't authenticate this particular request
                 .authorizeRequests().antMatchers("/register/**").permitAll()
@@ -93,6 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+*/
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

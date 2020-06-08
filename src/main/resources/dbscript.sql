@@ -537,8 +537,8 @@ ALTER SEQUENCE public.role_role_id_seq OWNED BY public.role.role_id;
 CREATE TABLE public.userrole (
     user_id integer NOT NULL,
     role_id integer NOT NULL,
-    CREATE CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES public.user (user_id),
-    CREATE CONSTRAINT role_id_fk FOREIGN KEY (role_id) REFERENCES public.role (role_id)
+    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES public.user (user_id),
+    CONSTRAINT role_id_fk FOREIGN KEY (role_id) REFERENCES public.role (role_id)
 );
 
 -- Alter Table Owner to postgres
