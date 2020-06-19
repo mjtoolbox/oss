@@ -31,10 +31,10 @@ VALUES
 
 -- TEACHER (level = intern (1), trainer (2), coach (3)) --
 INSERT INTO public.teacher(
-    teacher_name, cell_phone, email, home_phone, address, city, province, postal_code, subject, status, level, start_date)
+    program_id, teacher_name, cell_phone, email, home_phone, address, city, province, postal_code, subject, status, level, start_date)
 VALUES
-('John Smith','604-555-0000','john.smith@gmail.com',null,'1055 west Hasting st.','Vancouver','BC','V5K 0A1','Debate', 'active', 1,'2018-12-31'),
-('Michael Jo','604-555-1111','michael.jo@gmail.com','604-939-8893','739 Linton st.','Coquitlam','BC','V5J 6K4','Coding', 'active', 5,'2017-12-31');
+(10, 'John Smith','604-555-0000','john.smith@gmail.com',null,'1055 west Hasting st.','Vancouver','BC','V5K 0A1','Debate', 'active', 1,'2018-12-31'),
+(11, 'Michael Jo','604-555-1111','michael.jo@gmail.com','604-939-8893','739 Linton st.','Coquitlam','BC','V5J 6K4','Coding', 'active', 5,'2017-12-31');
 
 
 -- User
