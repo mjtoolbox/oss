@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
-@Table(name = "user", schema = "public")
+@Table(name = "users", schema = "public")
 public class User implements Serializable {
 
     @Id

@@ -489,11 +489,33 @@ ALTER TABLE public.user OWNER TO postgres;
 ALTER SEQUENCE public.user_user_id_seq OWNED BY public.user.user_id;
 
 
--- CREATE TABLE public.users(
---     username character varying(50) NOT NULL PRIMARY KEY,
---     password character varying(200) NOT NULL,
---     enabled boolean not null
--- );
+-----------------
+--- USERS ---------
+------------------
+CREATE SEQUENCE public.users_user_id_seq
+    START WITH 100
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.users (
+    user_id integer NOT NULL DEFAULT nextval('users_user_id_seq'),
+    username character varying(50) NOT NULL,
+    name character varying(50) NOT NULL, -- raw data null
+    password character varying(200) NOT NULL,
+    enabled boolean not null,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT user_id_pk PRIMARY KEY (user_id)
+);
+
+-- Alter Table Owner to postgres
+ALTER TABLE public.users OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+-- This means when student table is deleted, automatically delete this sequence.
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
 
 
 ------------------
@@ -537,7 +559,7 @@ ALTER SEQUENCE public.role_role_id_seq OWNED BY public.role.role_id;
 CREATE TABLE public.userrole (
     user_id integer NOT NULL,
     role_id integer NOT NULL,
-    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES public.user (user_id),
+    CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES public.users (user_id),
     CONSTRAINT role_id_fk FOREIGN KEY (role_id) REFERENCES public.role (role_id)
 );
 
@@ -653,7 +675,7 @@ CREATE TRIGGER last_updated BEFORE UPDATE ON lesson FOR EACH ROW EXECUTE PROCEDU
 CREATE TRIGGER last_updated BEFORE UPDATE ON report_card FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON invoice FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON public.pay_transaction FOR EACH ROW EXECUTE PROCEDURE last_updated();
-CREATE TRIGGER last_updated BEFORE UPDATE ON public.user FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.ossuser FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON public.role FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON public.userrole FOR EACH ROW EXECUTE PROCEDURE last_updated();
 

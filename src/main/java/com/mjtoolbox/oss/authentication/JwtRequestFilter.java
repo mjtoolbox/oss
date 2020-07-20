@@ -2,7 +2,6 @@ package com.mjtoolbox.oss.authentication;
 
 import com.mjtoolbox.oss.user.UserServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,7 +45,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        log.info("Token : " + requestTokenHeader);
+        log.info("First time should be empty. Token : " + requestTokenHeader);
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
@@ -55,7 +54,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
                 System.out.println("JWT Token has expired");
-            } catch (SignatureException e) {
+            } catch (Exception e) {
                 logger.error("Authentication Failed. Token does not have a valid signature.");
             }
         } else {

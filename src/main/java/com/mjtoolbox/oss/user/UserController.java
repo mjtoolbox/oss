@@ -39,6 +39,8 @@ public class UserController {
             throw new UserExistException("User email already exists: " + user.getUsername());
 
         }
+        // Need to consider encrypting and setting password for users
+//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

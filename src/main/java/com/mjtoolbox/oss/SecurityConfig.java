@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    // In-memory Authentication
+    // In-memory or JDBC Authentication implementation
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * AuthManagerBuilder provides various authentication mechanism: DB, LDAP, in-memory.
      * Configure AuthenticationManager so that it knows from where to load user for matching credentials.
+     * Don't use jdbcAuthentication() because it requires strict DB schema.
      *
      * @param auth
      * @throws Exception
@@ -54,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-//        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder())
+//        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder());
     }
 
 
@@ -86,30 +87,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 // Don't authenticate this particular request
-                .authorizeRequests().antMatchers("/").permitAll()
-                .and()
-                // All other request need to be authenticated
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-/*
-// Enable everything
-                .cors().and()
-                .csrf().disable()
-                // Don't authenticate this particular request
-                .authorizeRequests().antMatchers("/register/**").permitAll()
-                .and()
                 .authorizeRequests().antMatchers("/token/**").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/register/**").permitAll()
                 // All other request need to be authenticated
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-*/
-
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
-
-
 }

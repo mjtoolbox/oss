@@ -37,8 +37,8 @@ VALUES
 (11, 'Michael Jo','604-555-1111','michael.jo@gmail.com','604-939-8893','739 Linton st.','Coquitlam','BC','V5J 6K4','Coding', 'active', 5,'2017-12-31');
 
 
--- User
-INSERT INTO public.user(username, name, password, enabled)
+-- Users
+INSERT INTO public.users(username, name, password, enabled)
   VALUES ('michael.jo@gmail.com', 'Michael Jo','$2a$12$R5x9qtnCadcEi/QcmbCpI.71j6UPAt3mGNnyYukkPd1gYxPUPdHru', '1');
 
 -- Role
