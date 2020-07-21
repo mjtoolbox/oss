@@ -5,9 +5,7 @@ import com.mjtoolbox.oss.guardian.Guardian;
 import com.mjtoolbox.oss.reportcard.ReportCard;
 import com.mjtoolbox.oss.studentcontact.StudentContact;
 import com.mjtoolbox.oss.term.Term;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -20,6 +18,8 @@ import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode
+@NoArgsConstructor
 @Table(name = "student", schema = "public")
 public class Student implements Serializable {
 

@@ -5,9 +5,7 @@ import com.mjtoolbox.oss.lesson.Lesson;
 import com.mjtoolbox.oss.payroll.Payroll;
 import com.mjtoolbox.oss.program.Program;
 import com.mjtoolbox.oss.timesheet.Timesheet;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -20,6 +18,8 @@ import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode
+@NoArgsConstructor
 @Table(name = "teacher", schema = "public")
 public class Teacher implements Serializable {
 

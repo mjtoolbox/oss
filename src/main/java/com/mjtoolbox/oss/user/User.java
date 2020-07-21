@@ -1,5 +1,6 @@
 package com.mjtoolbox.oss.user;
 
+import com.mjtoolbox.oss.guardian.RegistrationInfo;
 import com.mjtoolbox.oss.role.Role;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -46,5 +47,11 @@ public class User implements Serializable {
             @JoinColumn(name = "role_id")})
     private Set<Role> roles = new HashSet<>();
 
+    public User(RegistrationInfo registrationInfo) {
+        this.username = registrationInfo.getEmail();
+        this.name = registrationInfo.getGuardian_name();
+        this.password = registrationInfo.getPassword();
+        this.enabled = true;
+    }
 
 }

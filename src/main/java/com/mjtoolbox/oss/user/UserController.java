@@ -32,7 +32,7 @@ public class UserController {
         return userRepository.findByUsername(email);
     }
 
-    @PostMapping("/register")
+    // Register through GuardianController
     public User createUser(@Valid @RequestBody User user) throws UserExistException {
         User existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser != null) {

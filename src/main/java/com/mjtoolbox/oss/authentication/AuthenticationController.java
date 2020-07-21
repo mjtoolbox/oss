@@ -43,13 +43,13 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserPrincipal userPrincipal = userServiceImpl.loadUserPrincipalByEmail(loginRequest.getEmail());
-        
+
         log.info("createAuthenticationToken: " + userPrincipal.getUsername());
         return new JwtResponse(200,
                 "success",
-                userPrincipal.getEmail(),
-                jwtTokenUtil.generateToken(userPrincipal),
                 userPrincipal.getUsername(),
+                jwtTokenUtil.generateToken(userPrincipal),
+                userPrincipal.getFullName(),
                 (Set) userPrincipal.getAuthorities()
         );
     }

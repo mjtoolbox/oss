@@ -1,7 +1,10 @@
 package com.mjtoolbox.oss.guardian;
 
+import com.mjtoolbox.oss.authentication.UserExistException;
 import com.mjtoolbox.oss.student.Student;
 import com.mjtoolbox.oss.student.StudentRepository;
+import com.mjtoolbox.oss.user.User;
+import com.mjtoolbox.oss.user.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,9 @@ public class GuardianController {
 
     @Resource
     StudentRepository studentRepository;
+
+    @Resource
+    UserServiceImpl userService;
 
     @GetMapping("/guardians")
     public List<Guardian> retrieveAllGuardians() {
@@ -57,17 +63,27 @@ public class GuardianController {
                 .orElseThrow(() -> new ResourceNotFoundException("Guardian not found with ID: " + student.getGuardian_id()));
     }
 
-
-    @PostMapping("/guardians")
-    public Guardian createGuardian(@Valid @RequestBody Guardian guardian) {
-        return guardianRepository.save(guardian);
+    /**
+     * Register Guardian and create "user" based on the guardian's information.
+     * Role should be "USER".
+     *
+     * @return
+     */
+    @PostMapping("/register")
+    public Guardian createGuardian(@Valid @RequestBody RegistrationInfo registrationInfo) throws UserExistException {
+        User user = userService.save(new User(registrationInfo));
+        if (user != null) {
+            return guardianRepository.save(new Guardian(registrationInfo));
+        } else {
+            throw new UserExistException("User is empty. Something went wrong.");
+        }
     }
 
     @PutMapping("/guardians/{guardian_id}")
     public Guardian updateGuardian(@PathVariable long guardian_id, @Valid @RequestBody Guardian guardian) {
         Guardian guardianFromDB = guardianRepository.findById(guardian_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Guardian not found with ID: " + guardian_id));
-        guardianFromDB.setGuardian_name(guardian.getGuardian_name());
+        guardianFromDB.setGuardianName(guardian.getGuardianName());
         guardianFromDB.setRelationship(guardian.getRelationship());
         guardianFromDB.setCell_phone(guardian.getCell_phone());
         guardianFromDB.setEmail(guardian.getEmail());

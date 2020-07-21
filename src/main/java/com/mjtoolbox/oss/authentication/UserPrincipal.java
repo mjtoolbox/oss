@@ -38,6 +38,7 @@ public class UserPrincipal implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
                 .collect(Collectors.toList());
 
+        // User name is actually emaill
         return new UserPrincipal(user.getUsername(),
                 user.getName(),
                 user.getPassword(),
@@ -51,15 +52,15 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return fullName;
-    }
-
-    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     @Override

@@ -95,26 +95,22 @@ public class UserServiceImpl implements UserDetailsService {
 
         User existingUser = userRepository.findByUsername(user.getUsername());
 
-        if (existingUser == null) {
+        if (existingUser != null) {
             throw new UserExistException(
                     "There is an account with that email address: " + user.getUsername());
-        } else if (!existingUser.isEnabled()) {
-            throw new UserExistException(
-                    "This account has been disabled. Cannot be updated");
         }
-
-        User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(passwordEncoder().encode(user.getPassword()));
+        
+        user.setUsername(user.getUsername());
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
 
         if (user.getRoles().size() == 0) {
             List<Role> roles = new ArrayList<Role>();
             roles.add(new Role("USER"));
-            newUser.setRoles(new HashSet<Role>(roles));
+            user.setRoles(new HashSet<Role>(roles));
         } else {
-            newUser.setRoles(user.getRoles());
+            user.setRoles(user.getRoles());
         }
 
-        return userRepository.save(newUser);
+        return userRepository.save(user);
     }
 }
