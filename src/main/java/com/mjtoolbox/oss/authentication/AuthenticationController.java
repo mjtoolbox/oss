@@ -45,7 +45,7 @@ public class AuthenticationController {
         final UserPrincipal userPrincipal = userServiceImpl.loadUserPrincipalByEmail(loginRequest.getEmail());
 
         log.info("createAuthenticationToken: " + userPrincipal.getUsername());
-        return new JwtResponse(200,
+        return new JwtResponse(true, 200,
                 "success",
                 userPrincipal.getUsername(),
                 jwtTokenUtil.generateToken(userPrincipal),
@@ -56,6 +56,6 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public JwtResponse logout() throws AuthenticationException {
-        return new JwtResponse(200, "success", null, null, null, null);
+        return new JwtResponse(false, 200, "success", null, null, null, null);
     }
 }

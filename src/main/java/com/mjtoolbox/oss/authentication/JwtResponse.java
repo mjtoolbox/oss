@@ -15,9 +15,11 @@ public class JwtResponse implements Serializable {
     private String token;
     private String name;
     private String email;
+    private boolean logged;
     private Set<? extends GrantedAuthority> roles;
 
-    public JwtResponse(int status, String message, String email, String token, String name, Set<? extends GrantedAuthority> roles) {
+    public JwtResponse(boolean logged, int status, String message, String email, String token, String name, Set<? extends GrantedAuthority> roles) {
+        this.logged = logged;
         this.status = status;
         this.message = message;
         this.email = email;
@@ -25,6 +27,4 @@ public class JwtResponse implements Serializable {
         this.name = name;
         this.roles = roles;
     }
-
-
 }
